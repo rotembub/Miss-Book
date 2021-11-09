@@ -56,7 +56,26 @@ function getSearchResults(value) {
 }
 
 function addGoogleBook(book) {
-    return storageService.post(BOOK_KEY, book)
+    const { title, subtitle, authors, publishedDate, description, pageCount, categories, language } = book.volumeInfo
+    var newBook = {
+        id: book.id,
+        title,
+        subtitle,
+        authors,
+        publishedDate,
+        description,
+        pageCount,
+        categories,
+        thumbnail: book.volumeInfo.imageLinks.thumbnail,
+        language,
+        listPrice: {
+            amount: 150,
+            currencyCode: "ILS",
+            isOnSale: false,
+        }   
+    }
+    console.log(newBook);
+    return storageService.post(BOOK_KEY, newBook)
 }
 
 function getNextAndPrevBook(id) {

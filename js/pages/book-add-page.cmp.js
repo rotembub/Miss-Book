@@ -12,7 +12,7 @@ export default {
             <div v-if="books" class="search-results">
                 <ul v-for="book in books">
                     <li>Title: {{book.volumeInfo.title}}</li>
-                    <li>By: {{arrayForDisplay(book.volumeInfo.authors)}}</li>
+                    <li>By: {{book.volumeInfo.authors}}</li>
                     <button @click="addBook(book.id)">Add</button>
                 </ul>
             </div>
@@ -44,32 +44,20 @@ export default {
         addBook(id) {
             var book = this.books.find(book => book.id === id);
 
-            var newBook = {
-                id: book.id,
-                title: book.volumeInfo.title,
-                subtitle: book.volumeInfo.subtitle,
-                authors: book.volumeInfo.authors,
-                publishedDate: book.volumeInfo.publishedDate,
-                description: book.volumeInfo.description,
-                pageCount: book.volumeInfo.pageCount,
-                categories: book.volumeInfo.categories,
-                thumbnail: book.volumeInfo.imageLinks.thumbnail,
-                language: book.volumeInfo.language,
-                listPrice: {
-                    amount: 150,
-                    currencyCode: "ILS",
-                    isOnSale: false,
-                }
-            }
-            bookService.addGoogleBook(newBook)
-                .then(() => {
-                    eventBus.$emit('added') ///////////////////////
+            bookService.addGoogleBook(book)
+                .then((res) => {
+                    eventBus.$emit('added');
+                    const msg = {
+                        txt: 'New Book Added!',
+                        type: 'success',
+                        link: '/book/' + res.id,
+                    }
+                    eventBus.$emit('message', msg)
                 })
                 .catch(err => {
                     console.log('Error', err);
                 })
-            // console.log('added', newBook);
-            // NEED TO EMIT ADDED BOOK SO IT WILL BE UPDATED !
+
         }
 
     },
