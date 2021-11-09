@@ -20,6 +20,7 @@ function _createBooks() {
     var books = utilServices.loadFromStorage(BOOK_KEY)
     if (!books || !books.length) {
         books = gBooks;
+        console.log(gBooks)
         utilServices.saveToStorage(BOOK_KEY, gBooks);
     }
 

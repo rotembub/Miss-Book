@@ -7,7 +7,7 @@ export default {
     template: `
         <section class="book-app">
             <book-filter @filter="setFilter"></book-filter>
-            <book-list :books="booksToShow"></book-list>
+            <book-list v-if="books" :books="booksToShow"></book-list>
         </section>
     `,
     components: {

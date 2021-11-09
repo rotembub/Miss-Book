@@ -13,7 +13,7 @@ export default {
                             <option v-for="num in 5" :value="num">{{num}}</option>
                         </select>
                         <label for="date">Read on:</label>
-                        <input v-model="review.date" type="datetime-local" id="date" name="date" required>
+                        <input v-model="review.date" type="date" id="date" name="date" required>
                         <label for="comments">Write a comment</label>
                         <textarea v-model="review.txt" name="comments" placeholder="Comments" rows="10" cols="30" required></textarea>
                         <button>Send</button>
@@ -26,7 +26,7 @@ export default {
         }
     },
     created() {
-        this.review = this.defaultReview;
+        this.review = this.defaultReview();
     },
     mounted() {
         // console.log(this);
@@ -34,13 +34,13 @@ export default {
     },
     methods: {
         saveReview() {
-            this.$emit('save', this.review);
-            this.review = this.defaultReview;
-        }
-
-    },
-    computed: {
+            this.$emit('save', { ...this.review });
+            this.review = null;
+            this.review = this.defaultReview();
+            console.log(this.review);
+        },
         defaultReview() {
+            console.log('hi');
             return {
                 name: 'Book Reader',
                 rate: '1',
@@ -48,5 +48,9 @@ export default {
                 txt: '',
             }
         }
+
+    },
+    computed: {
+
     }
 }
