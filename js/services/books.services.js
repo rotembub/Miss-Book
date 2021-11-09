@@ -3,9 +3,13 @@ export const bookService = {
     getBookById,
     addReview,
     deleteReview,
+    getSearchResults,
+    addGoogleBook,
+    getNextAndPrevBook,
 }
 import { storageService } from './async-storage-service.js'
 import { utilServices } from './util.js';
+import { googleApiServices } from './google-api.services.js';
 
 const BOOK_KEY = 'books'
 // _createBooks();
@@ -47,6 +51,24 @@ function deleteReview(id, reviewIdx) {
         })
 }
 
+function getSearchResults(value) {
+    return googleApiServices.getBooks(value);
+}
+
+function addGoogleBook(book) {
+    return storageService.post(BOOK_KEY, book)
+}
+
+function getNextAndPrevBook(id) {
+    return query()
+        .then(books => {
+            var nextToBooks = {};
+            const idx = books.findIndex(book => book.id === id);
+            nextToBooks.next = (idx === books.length - 1) ? books[0].id : books[idx + 1].id;
+            nextToBooks.prev = (idx === 0) ? books[books.length - 1].id : books[idx - 1].id;
+            return nextToBooks
+        });
+}
 
 const gBooks = [
     {

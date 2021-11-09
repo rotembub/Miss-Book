@@ -10,7 +10,7 @@ export default {
                 <h2>{{book.title}}</h2>
                 <h4>{{book.subtitle}}</h4>
                 <span> By: {{authorsForDisplay}}</span>
-                </div>
+                
                 <span>Published: {{publishedDate}}</span>
                 <book-description :desc="book.description"></book-description>
                 <span>Pages: {{pageCount}}</span>
@@ -32,6 +32,10 @@ export default {
 
                 <button @click="reviewToggle">{{btnTxt}}</button>
                 <review-add v-if="isReviewOpen" @save="saveReview"></review-add>
+                <div>
+                    <router-link :to="'/book/'+prevBook">Previous</router-link> |
+                    <router-link :to="'/book/'+nextBook">Next</router-link>
+                </div>
 
        </section>
     `,
@@ -43,14 +47,34 @@ export default {
         return {
             book: null,
             isReviewOpen: false,
+            nextBook: null,
+            prevBook: null,
+
         }
     },
     created() {
-        const { bookId } = this.$route.params;
-        bookService.getBookById(bookId)
-            .then(book => {
-                this.book = book;
-            })
+        // const { bookId } = this.$route.params;
+        // bookService.getBookById(bookId)
+        //     .then(book => {
+        //         this.book = book;
+        //     })
+    },
+    watch: {
+        '$route.params.bookId': {
+            handler() {
+                const { bookId } = this.$route.params;
+                bookService.getBookById(bookId)
+                    .then(book => {
+                        this.book = book;
+                    })
+                bookService.getNextAndPrevBook(bookId)
+                    .then(res => {
+                        this.nextBook = res.next;
+                        this.prevBook = res.prev;
+                    });
+            },
+            immediate: true
+        }
     },
     methods: {
         reviewToggle() {

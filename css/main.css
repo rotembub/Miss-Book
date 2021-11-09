@@ -180,3 +180,18 @@ body{
     padding: 10px;
     margin-bottom: 10px;
 }
+
+.book-add-page{
+    text-align: center;
+}
+.book-add-page ul{
+    list-style: none;
+}
+
+.search-results{
+    display: flex;
+    flex-direction: row;
+    align-content: stretch;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}

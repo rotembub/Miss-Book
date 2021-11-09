@@ -1,13 +1,18 @@
 import { bookService } from '../services/books.services.js';
 import bookList from '../cmps/book-list.cmp.js';
 import bookFilter from '../cmps/book-filter.cmp.js'
-// import {eventBus} from '../services/event-bus-service.js'
+import { eventBus } from '../services/event-bus-service.js'
+
 
 export default {
+
     template: `
         <section class="book-app">
             <book-filter @filter="setFilter"></book-filter>
+            <router-link to="/book/add">Add a Book</router-link>
+            <router-view></router-view>
             <book-list v-if="books" :books="booksToShow"></book-list>
+            
         </section>
     `,
     components: {
@@ -21,12 +26,21 @@ export default {
         }
     },
     created() {
+        eventBus.$on('added', this.updateBooks);
         bookService.query()
             .then(books => this.books = books)
+
+    },
+    destroyed() {
+        eventBus.$off('added', this.updateBooks);
     },
     methods: {
         setFilter(filter) {
             this.filterBy = filter;
+        },
+        updateBooks() {
+            bookService.query()
+                .then(books => this.books = books)
         }
     },
     computed: {
